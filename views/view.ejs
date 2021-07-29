@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<!-- Head -->
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Today's to-do list</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+
+  <!-- CSS Stylesheets-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+
+</head>
+
+<!-- Body -->
+
+<body>
+
+  <!-- Nav Bar -->
+
+  <nav class="navbar navbar-dark sticky-top">
+    <div>
+      <% if (isLoggedIn) { %>
+      <a id="nav-button" class="btn btn-light navbar__button">Logout</a>
+      <% } else {%>
+      <a id="nav-button" class="btn btn-light navbar__button">Login</a>
+      <% } %>
+    </div>
+    <div>
+      <h3 id="current-date" class="navbar__heading"></h3>
+    </div>
+    <button id="nav-toggler" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-toggler-content" onclick="togglerClicked()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav-toggler-content">
+      <div class="box">
+        <audio id="myAudio">
+          <source id="song" src="" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+        <div class="row">
+          <div class="audio__row">
+            <h4 id="playlist-title">
+            </h4>
+          </div>
+          <div class="dropdown">
+            <button type="button" class="audio__composer-button green-button" data-toggle="dropdown">
+              <img src="images/arrow-drop-down.svg" alt="Choose composer">
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="javascript:changeComposer('Bach');">Bach</a>
+              <a class="dropdown-item" href="javascript:changeComposer('Chopin');">Chopin</a>
+              <a class="dropdown-item" href="javascript:changeComposer('Mozart');">Mozart</a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="audio__row">
+            <h6 id="song-title">
+            </h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="audio__row">
+            <button id="play-button" class="green-button audio__controll-button" type="button" onclick="playSong()" name="button" style="display:inline-block">
+              <img src="images/play.svg" alt="Play">
+            </button>
+            <button id="pause-button" class="green-button audio__controll-button" type="button" onclick="pauseSong()" name="button" style="display:none">
+              <img src="images/pause.svg" alt="Pause">
+            </button>
+            <button id="previous-song-button" class="green-button audio__controll-button" type="button" onclick="previousSong()" name="button">
+              <img src="images/skip-previous.svg" alt="Previous">
+            </button>
+            <button id="next-song-button" class="green-button audio__controll-button" type="button" onclick="nextSong()" name="button">
+              <img src="images/skip-next.svg" alt="Next">
+            </button>
+            <button id="volume-down-button" class="green-button audio__controll-button" type="button" onclick="volumeDown()" name="button">
+              <img src="images/volume-down.svg" alt="Volume down">
+            </button>
+            <button id="volume-up-button" class="green-button audio__controll-button" type="button" onclick="volumeUp()" name="button">
+              <img src="images/volume-up.svg" alt="Volume up">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+
+  <div id="main-section" class="container-fluid">
+    <div class="row">
+
+      <!-- To-do list -->
+
+      <div class="col-md-6">
+        <div class="box">
+          <h1 class="box__heading">To-Do List</h1>
+        </div>
+        <div class="box left">
+          <form id="new-item" class="box__row space-between" method="post">
+            <input id="new-item-text" type="text" name="new-item-text" placeholder="New Item" autocomplete="off">
+            <button class="btn btn-lg rounded-circle green-button" name="list" value="">+</button>
+          </form>
+          <div class="list-item"></div>
+        </div>
+      </div>
+
+      <!-- Work log -->
+
+      <div class="col-md-6">
+        <div class="box">
+          <h1 class="box__heading">Workday Log</h1>
+        </div>
+        <div class="box right">
+          <div class="box__row space-between">
+            <button id="working-button" class="btn btn-default green-button" type="button">Start Working</button>
+            <span></span>
+            <button id="edit-button" class="btn btn-default green-button" type="button">Edit</button>
+          </div>
+          <div class="log-item">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login -->
+
+  <div hidden id="login-section" class="container-fluid">
+    <div class="box" id="heading">
+      <h1 class="box__heading">Login</h1>
+    </div>
+    <div class="box">
+      <div class="card">
+        <div class="card-body">
+          <form id="login-form" action="" method="POST">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="username" type="email" class="form-control" name="username">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input id="password" type="password" class="form-control" name="password">
+            </div>
+            <div class="row padded">
+              <div>
+                <button class="btn green-button login-submit">Submit</button>
+              </div>
+              <div class="green-link ml-auto">
+                <a id="register-button">Create an account</a>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="login-message-container">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register -->
+
+  <div hidden id="register-section" class="container-fluid">
+    <div class="box" id="heading">
+      <h1 class="box__heading">Register</h1>
+    </div>
+    <div class="box">
+      <div class="card">
+        <div class="card-body">
+          <form id="register-form" action="" method="POST">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="proposed-username" type="email" class="form-control" name="username">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input id="proposed-password" type="password" class="form-control" name="password">
+            </div>
+            <div class="row padded">
+              <div>
+                <button class="btn green-button">Submit</button>
+              </div>
+              <div class="green-link ml-auto">
+                <a id="login-button">Already a user?</a>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="register-message-container">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery and Bootstrap scripts -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+  <!-- Custom scripts -->
+
+  <script src="/js/audioPlayer.js"></script>
+  <script src="/js/models/timekeeper.js"></script>
+  <script src="/js/models/calculator.js"></script>
+  <script src="/js/models/visitor.js"></script>
+  <script src="/js/controllers/ajaxController.js"></script>
+  <script src="/js/controllers/viewController.js"></script>
+  <script src="/js/controllers/eventController.js"></script>
+
+</body>
+
+</html>
